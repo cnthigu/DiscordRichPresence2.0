@@ -1,2 +1,18 @@
-﻿  dllmain.cpp
+﻿  achievement_manager.cpp
+  activity_manager.cpp
+  application_manager.cpp
+  core.cpp
+  dllmain.cpp
+  image_manager.cpp
+  lobby_manager.cpp
+  network_manager.cpp
+  overlay_manager.cpp
+  relationship_manager.cpp
+  storage_manager.cpp
+  store_manager.cpp
+  types.cpp
+  user_manager.cpp
+  voice_manager.cpp
+  Gerando Código...
+     Criando biblioteca C:\Users\HIGORV\Desktop\DiscordRichPresence-master\Debug\CoGolden.lib e objeto C:\Users\HIGORV\Desktop\DiscordRichPresence-master\Debug\CoGolden.exp
   CoGolden.vcxproj -> C:\Users\HIGORV\Desktop\DiscordRichPresence-master\Debug\CoGolden.dll

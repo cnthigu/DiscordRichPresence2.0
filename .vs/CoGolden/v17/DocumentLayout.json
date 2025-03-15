@@ -14,8 +14,12 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{004be353-6879-467c-9d1e-9ac23cdf6d49}"
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
@@ -32,7 +36,7 @@
               "RelativeDocumentMoniker": "CoGolden\\dllmain.cpp",
               "ToolTip": "C:\\Users\\HIGORV\\Desktop\\DiscordRichPresence-master\\CoGolden\\dllmain.cpp",
               "RelativeToolTip": "CoGolden\\dllmain.cpp",
-              "ViewState": "AgIAADcBAAAAAAAAAAAAAFgBAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAAM8BAAAAAAAAAAAqwOgBAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-03-07T08:51:51.904Z",
               "EditorCaption": ""

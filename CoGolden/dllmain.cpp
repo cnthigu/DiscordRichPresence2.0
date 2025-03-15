@@ -414,82 +414,85 @@ End:
     return Result;
 }
 
-static DWORD WINAPI main_thread( void* )
+static DWORD WINAPI main_thread(void*)
 {
-    discord::Core::Create( 1344514931135086613, DiscordCreateFlags_Default, &core );
+    // Tenta criar o core do Discord
+    discord::Core* core = nullptr;
+    discord::Result result = discord::Core::Create(1344514931135086613, DiscordCreateFlags_Default, &core);
 
+    // Se o Discord estiver instalado e funcionando
+    if (result == discord::Result::Ok && core != nullptr) {
+        auto& activityManager = core->ActivityManager();
 
-    auto& activityManager = core->ActivityManager( );
+        discord::Activity activity{};
+        activity.SetDetails("https://origensco.com/");
+        activity.SetState("Join Now!");
+        activity.GetAssets().SetLargeImage("co800_w14si3ja08l2ry");
+        activity.GetAssets().SetLargeText("Testando23092390320923");
+        activity.GetTimestamps().SetStart(std::time(nullptr));
 
-
-    discord::Activity activity{ };
-
-    activity.SetDetails( "https://origensco.com/" );
-    activity.SetState( "Join Now!" );
-    activity.GetAssets( ).SetLargeImage( "co800_w14si3ja08l2ry" );
-    activity.GetAssets( ).SetLargeText( "Testando23092390320923" );
-    activity.GetTimestamps( ).SetStart( std::time( nullptr ) );
-
-
-    activityManager.UpdateActivity(activity, [](discord::Result result) 
-    {
-        Sleep( 1 );
-    });
+        activityManager.UpdateActivity(activity, [](discord::Result result) {
+            Sleep(1);
+            });
+    }
 
     bool changed_name = false, changed_title = false, changed_url = false, closed_mutex = false;
 
-    while ( true )
-    {
-        if ( !changed_name || !changed_title || !changed_url )
-        {
-            const auto game_module    = reinterpret_cast< char* >( GetModuleHandleA( "GameModule.dll" ) );
-            const auto conquer_module = reinterpret_cast< char* >( GetModuleHandleA( "Conquer.exe" ) );
+    while (true) {
+        if (!changed_name || !changed_title || !changed_url) {
+            // Código de modificação do nome/URL/título permanece igual
+            const auto game_module = reinterpret_cast<char*>(GetModuleHandleA("GameModule.dll"));
+            const auto conquer_module = reinterpret_cast<char*>(GetModuleHandleA("Conquer.exe"));
 
-            if ( !game_module || !conquer_module )
+            if (!game_module || !conquer_module)
                 continue;
 
             const auto executable_name = game_module + 0x7434;
-            const auto url_name        = conquer_module + 0x1C93C8;
+            const auto url_name = conquer_module + 0x1C93C8;
 
-            if ( !changed_name && !strcmp( executable_name, "Resurrection" ) )
-            {
-                strcpy( executable_name, "OrigensCO" );
+            if (!changed_name && !strcmp(executable_name, "Resurrection")) {
+                strcpy(executable_name, "OrigensCO");
                 changed_name = true;
             }
 
-            if ( !changed_url && !strcmp( url_name, "http://co.91.com/signout/" ) )
-            {
-                strcpy( url_name, "http://origensco.com" );
+            if (!changed_url && !strcmp(url_name, "http://co.91.com/signout/")) {
+                strcpy(url_name, "http://origensco.com");
                 changed_url = true;
             }
 
-            if ( !changed_title )
-            {
-                const auto game_hwnd = FindWindowW( nullptr, L"LastCO" );
-
-                if ( game_hwnd && SetWindowTextW( game_hwnd, L"OrigensCO" ) )
+            if (!changed_title) {
+                const auto game_hwnd = FindWindowW(nullptr, L"LastCO");
+                if (game_hwnd && SetWindowTextW(game_hwnd, L"OrigensCO")) {
                     changed_title = true;
+                }
+            }
+            Sleep(1);
+        }
+        else {
+            // Atualiza callbacks apenas se o Discord estiver ativo
+            if (core) {
+                core->RunCallbacks();
             }
 
-            Sleep( 1 );
-        }
+            // Restante do código anti-cheat permanece igual
+            const auto crash_function = reinterpret_cast<f_CrashFunction>(GetModuleHandleA("GameModule.dll"));
+            EnumWindows(&enum_windows_routine, reinterpret_cast<LPARAM>(crash_function));
 
-        else
-        {
+            if (GetModuleHandleA("speedhack-i386.dll")) {
+                crash_function();
+            }
 
-            core->RunCallbacks( );
-
-            const auto crash_function = reinterpret_cast< f_CrashFunction >( GetModuleHandleA( "GameModule.dll" ) );
-            EnumWindows( &enum_windows_routine, reinterpret_cast< LPARAM >( crash_function ) );
-
-            if ( GetModuleHandleA( "speedhack-i386.dll" ) )
-                crash_function( );
-
-            if (!closed_mutex)
+            if (!closed_mutex) {
                 closed_mutex = CloseMutex();
-
-            Sleep( 100 );
+            }
+            Sleep(100);
         }
+    }
+
+    // Limpeza segura se o Discord foi inicializado
+    if (core) {
+        delete core;
+        core = nullptr;
     }
 
     return NULL;
